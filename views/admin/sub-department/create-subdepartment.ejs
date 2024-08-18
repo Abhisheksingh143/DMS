@@ -1,0 +1,127 @@
+<%- include('../../includes/header')  %>
+
+<body id="page-top">
+    <div id="wrapper">
+        <%- include('../../includes/sidebar') %>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <%- include('../../includes/navbar') %>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-3">Sub Department</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3" style="display: flex;justify-content: space-between;align-items: center;">
+                            <p class="lead text-primary m-0 fw-bold">Create Sub-Department</p>
+                        </div>
+                        <div class="card-body">
+
+                            <% if(edit) { %>
+                                
+                                <form action="/admin/sub-departments/update/<%= subDepartment.id %>" method="post">
+                                    <div class="form-group">
+                                        <label class="form-label" for="branch_id">Branch</label>
+                                        <select  id="branch" name="branch_id"  class="form-select" >
+                                              <option selected value="">Choose Branch</option>
+                                            <optgroup label="Branch">
+                                                <% branches.forEach((branch, index) => { %>
+                                                <option <%= branch && branch.id == subDepartment.department.branch.id ? 'selected' : '' %> value="<%= branch.id %>" ><%= branch.branch_name %></option>
+                                                <% }) %>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                    <div class="form-group"><label class="form-label" for="sub_department_name">Department</label>
+                                        <select id="department"  class="form-select"name="department_id">
+                                            <option value="">Choose Department</option>
+                                                <optgroup id="editOptGroup" label="Departments">
+                                                    <% departments.forEach((department) => { %>
+                                                    <option <%= subDepartment.department.id === department.id ? 'selected' : '' %>
+                                                    value="<%=  department.id %>" ><%= department.department_name %></option>
+                                                    <% }) %>
+                                                   </optgroup>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="sub_department_name">Sub-Department Name</label>
+                                        <input class="form-control form-input" type="text" name="sub_department_name" 
+                                        value="<%= subDepartment.sub_department_name %>"
+                                        autocomplete="on" placeholder="Sub-Department Name">
+                                    </div>
+                                    <div id="customFieldsContainer"></div>
+                                    <button class="btn btn-primary" onclick="addCustomField()">Add Field</button>
+
+                                  
+                                    <div class="submit-btn-div" style="margin-top: 20px;">
+                                        <button class="btn btn-primary submit-btn" type="submit">Save</button></div>
+                                </form>
+
+                                <% } %>
+
+
+                               <%  if(!edit){ %>
+                                <form action="/admin/sub-departments/create" method="post">
+                                    <div class="form-group">
+                                        <label class="form-label" for="branch_id">Branch</label>
+                                        <select  id="branch"  class="form-select" name="branch_id">
+                                            <option selected value="">Choose Branch</option>
+                                            <optgroup label="Branch">
+                                                <% branches.forEach((branch, index) => { %>
+                                                <option  value="<%= branch.id %>" ><%= branch.branch_name %></option>
+                                                <% }) %>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                    <div class="form-group"><label class="form-label" for="sub_department_name">Department</label>
+                                        <select id="department"  class="form-select"name="department_id">
+                                            <option selected value="">Choose Department</option>
+                                            <optgroup id="subDepartmentOptGroup" label="Departments">
+                                               
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="sub_department_name">Sub-Department Name</label>
+                                        <input class="form-control form-input" type="text" name="sub_department_name" 
+                                        autocomplete="on" placeholder="Sub-Department Name">
+                                    </div>
+                                    <div style="margin-top: 20px;" id="customFieldsContainer">
+
+                                    </div>
+                                    <button  class="btn btn-primary add-custom-field-btn" type="button" onclick="addCustomField()">
+                                        <i class="fa fa-plus">Add Custom Field</i>
+                                    </button>
+                                    <div class="submit-btn-div" style="margin-top: 20px;">
+                                        <button class="btn btn-primary submit-btn" type="submit">Save</button>
+                                    </div>
+                                </form>
+
+                             <%  }%>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%- include('../../includes/footer')  %>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top">
+            <i class="fas fa-angle-up"></i></a>
+    </div>
+
+   
+        <%- include('../../includes/script')  %>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+            //as soon as body loads load fields using function
+
+            const existingFields = JSON.parse('<%- JSON.stringify(customFields) %>');
+            loadExistingFields(existingFields);
+        });
+
+        </script>
+
+        <script>
+            const userRole = '<%= user.role %>'
+        </script>
+        
+        <script src="/js/fetch_departments.js"></script>
+        <script src="/js/custom_fields.js"></script>
+</body>
+
+</html>

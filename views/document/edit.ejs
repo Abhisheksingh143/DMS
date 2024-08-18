@@ -1,0 +1,193 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<%- include('../includes/header') %>
+
+<body id="page-top">
+    <div id="wrapper">
+        <%- include('../includes/sidebar') %>
+
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <%- include('../includes/navbar') %>
+
+                
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Documents</h3>
+                  
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">Edit Document</p>
+                            <% metaData.forEach((data) => { %>
+                            <p class="text-info m-0 fw-bold"><%= data %></p>
+                            <% }) %>
+                        </div>
+                       
+                        <div id="flash-messages"></div>
+                          
+                        <form action="/<%= user.role === 'super-admin' ? 'super' :'admin' %>/documents/<%= document.id %>/update" method="post" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 text-nowrap">
+                                    <div class="form-group"><label class="form-label">
+                                        <strong>Division&nbsp;&nbsp;</strong>
+                                        <select name="branch" class="d-inline-block form-select form-select-sm" id="branch">
+                                            
+                                            <% branches.forEach((branch, index) => { %>
+                                                <option value="<%= branch.id %>" <%= branch.branch_name === document.sub_department.department.branch.branch_name ? 'selected' : '' %>>
+                                                    <%= branch.branch_name %>
+                                                </option>
+                                            <% }) %>
+                                            
+                                            </optgroup>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-nowrap">
+                                    <div class="form-group"><label class="form-label">
+                                        <strong>Department&nbsp;&nbsp;</strong>
+                                        <select id="department" name="department"  class="d-inline-block form-select form-select-sm" 
+                                         style="width: auto;">
+                                                <% departments.forEach((department) => { %>
+                                                    <option value="<%= department.id %>" <%= department.department_name === document.sub_department.department.department_name ? 'selected' : '' %>>
+                                                        <%= department.department_name %>
+                                                    </option>
+                                                <% }) %>
+                                        </select>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-nowrap">
+                                    <div class="form-group"><label class="form-label">
+                                        <strong>Sub-Department&nbsp;&nbsp;</strong>
+                                        <select class="d-inline-block form-select form-select-sm"
+                                         id="sub-department" name="subDepartmentId"
+                                            style="width: auto;">
+                                            
+                                            <% subDepartments.forEach((sub, index) => { %>
+                                                <option value="<%= sub.id %>" <%= sub.sub_department_name === document.sub_department.sub_department_name ? 'selected' : '' %>>
+                                                    <%= sub.sub_department_name %>
+                                                </option>
+                                            <% }) %>
+                                            
+                                            </select>
+                                        </label>
+                                        </div>
+                                </div>
+                            </div>
+                                <div class="row">
+            
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            
+                                            <label class="form-label" for="document">File Upload</label>
+                                            <input class="form-control" type="file" name="file" /></div>
+                                    </div>
+                                </div>
+                                
+                                <% if(customFields.length > 0){ %>
+                                <div class="row" style="margin-top: 20px;" id="customFieldContainer">
+                                       <% customFields.forEach(field => { %>
+                                                <label for="<%= field.fieldName %>"><%= field.label %></label>
+                                                <input style="width: auto;" class="form-control" type="<%= field.fieldType %>" name="<%= field.fieldName %>"
+                                                value="<%= customFieldsData[field.fieldName] || '' %>">
+                                                
+                                        <% }) %>
+                                </div>
+                               <% } %>
+                                <div class="submit-btn-div" style="margin-top: 20px;">
+                                    <button class="btn btn-primary submit-btn" type="submit">Upload</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <%- include('../includes/footer') %>
+
+        </div>
+        <a class="border rounded d-inline scroll-to-top" href="#page-top">
+            <i class="fas fa-angle-up"></i></a>
+    </div>
+    <%- include('../includes/script') %>
+    <script>
+        let userRole = '<%= user.role %>'
+        const customData = '<%= JSON.stringify(customFields) %>';
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const departmentSelect = document.getElementById('department');
+        const subDepartmentSelect = document.getElementById('sub-department');
+
+        // Event listener for department selection
+        let optGroup = document.getElementById('editOptGroup');
+    
+                    if(!optGroup) optGroup = ''
+    
+                    departmentSelect.addEventListener('change', async(event) => {
+                        const userRole = "<%= user.role %>"
+                   
+                        optGroup.innerHTML = ""
+                        const departmentId = event.target.value;
+                   
+                        let url = `/${userRole === 'super-admin' ? 'super' : 'admin'}/sub-departments/getsubdepartment/${departmentId}`;
+    
+                        if(userRole === 'user')
+                            url = `/users/sd`;
+    
+                        const response = await fetch(url);
+                        const subDepartments = await response.json();
+                        
+                    // Clear the current department options
+                    subDepartmentSelect.innerHTML = '';
+                    subDepartmentSelect.innerHTML = '<option selected>Choose Sub-Department</option>';
+                    subDepartments.forEach(subdepartment => {
+                 
+                        const option = document.createElement('option');
+                        option.value = subdepartment.id;
+                        option.textContent = subdepartment.sub_department_name;
+                        subDepartmentSelect.appendChild(option);
+                    });
+                    });
+    
+    
+    });
+    
+    </script>
+    <script src="/js/fetch_departments.js"></script>
+    <script src="/js/edit_doc_cust_field.js"></script>
+    
+    
+    <!-- <script>
+        $(document).ready(function() {
+            $('#uploadForm').on('submit', function(e) {
+                e.preventDefault();
+        
+                var formData = new FormData(this);
+                    console.log(formData)
+                $.ajax({
+                    type: 'POST',
+                    url: `/<%= user.role === 'super-admin' ? 'super' :'admin' %>/documents/<%= document.id %>/update`,
+                    data: formData,
+                    contentType: false, // Tell jQuery not to set contentType
+                    processData: false, // Tell jQuery not to process the data
+                    success: function(response) {
+                        console.log(response)
+                        $('#flash-messages').html('<div class="alert alert-success">' + response.message + '</div>');
+                        setTimeout(function() {
+                            window.location.href = `/<%= user.role === 'super-admin' ? 'super' :'admin' %>/documents/upload-document`; // Replace with your success page URL
+                        }, 2000);
+                    },
+                    error: function(xhr) {
+                        console.log(xhr)
+                        var error = xhr.responseJSON.message || 'An error occurred';
+                        $('#flash-messages').html('<div class="alert alert-danger">' + error + '</div>');
+                    }
+                });
+            });
+        });
+        </script> -->
+
+</body>
+
+</html>

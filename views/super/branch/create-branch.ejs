@@ -1,0 +1,55 @@
+<%- include('../../includes/header') %>
+
+<body id="page-top">
+    <div id="wrapper">
+<%- include('../../includes/sidebar') %>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <%- include('../../includes/navbar')%>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-3">Branch</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3" style="display: flex;justify-content: space-between;align-items: center;">
+                            <p class="lead text-primary m-0 fw-bold">Create Branch</p>
+                        </div>
+                        <div class="card-body">
+
+                            <% if(status === 'create'){ %>
+
+                            <form method="post" action="/super/branches/create">
+                                <div class="form-group">
+                                    <label class="form-label" for="branch_name">Branch Name</label>
+                                    <input class="form-control form-input" type="text" name="branch_name" autocomplete="on" placeholder="Branch Name"></div>
+                                <div class="form-group">
+                                    <label class="form-label" for="address">Branch Address</label>
+                                    <input class="form-control form-input" type="text" name="address" autocomplete="on" placeholder="Branch Address"></div>
+                                <div class="submit-btn-div"><button class="btn btn-primary submit-btn" type="submit">Save</button></div>
+                            </form>
+                    <% } %>
+
+                    <% if(status === 'edit'){ %>
+
+                        <form method="post" action="/super/branches/<%= branch.id %>/update">
+                            <div class="form-group">
+                                <label class="form-label" for="branch_name">Branch Name</label>
+                                <input class="form-control form-input" type="text" name="branch_name"
+                                 autocomplete="on" value="<%= branch.branch_name  %>" placeholder="Branch Name">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="address">Branch Address</label>
+                                <input class="form-control form-input" type="text" name="address"
+                                 autocomplete="on" value="<%= branch.address %>" placeholder="Branch Address"></div>
+                            <div class="submit-btn-div"><button class="btn btn-primary submit-btn" type="submit">Update</button></div>
+                        </form>
+                <% } %>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+           <%- include('../../includes/footer') %>
+    <%- include('../../includes/script') %>
+</body>
+
+</html>

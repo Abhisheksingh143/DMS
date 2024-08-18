@@ -1,0 +1,186 @@
+
+<%- include('../includes/header')  %>
+
+<body id="page-top">
+    <div id="wrapper">
+        <%- include('../includes/sidebar')  %>
+
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <%- include('../includes/navbar')  %>
+
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Users</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3" style="display: flex;justify-content: space-between;align-items: center;">
+                            <p class="lead text-primary m-0 fw-bold">Right User</p>
+                        </div>
+                        <div class="card-body">
+                            <form action="/<%= user.role === 'super-admin' ? 'super' : 'admin'  %>/users/create-permission" method="post">
+                                <input type="hidden" name="userId" value="<%= userPermissions.id %>">
+                                <div class="form-group"><label class="form-label" for="branch_name">Name</label>
+                                    <input name="username" class="form-control form-input" type="text" value="<%= userPermissions.username %>"
+                                    autocomplete="on" placeholder="User Name"  <%= user ? 'disabled' : '' %>  >
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-md-3 text-nowrap">
+                                        <div class="form-group"><label class="form-label">
+                                            <strong>Divison&nbsp;&nbsp;</strong>
+                                            <select class="form-select d-inline-block form-select form-select-sm">
+                                                    <option  selected>Select Branch</option>
+                                                    <option value="<%= branch.id %>"><%= branch.branch_name %></option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-nowrap" style="margin-right: 20px;">
+                                        <div class="form-group">
+                                            <label class="form-label">
+                                                <strong>Department&nbsp;&nbsp;</strong>
+                                                <select name="departmentId" id="department" class="form-select d-inline-block form-select form-select-sm">
+                                                    <option selected>Select Department</option>    
+                                                    <% departments.forEach(department => { %>
+                                                        <option value="<%= department.id %>"><%= department.department_name %></option>
+                                                        <% }); %>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-nowrap">
+                                        <div class="form-group">
+                                            <label class="form-label"><strong>Sub-Department&nbsp;&nbsp;</strong>
+                                                
+                                                <select name="subDepartmentId" id="sub-department" style="width: auto;"
+                                                class="form-select d-inline-block form-select form-select-sm">
+                                                <option selected>Select Sub-Department</option>
+
+                                                    <optgroup id="editOptGroup" label="Sub-Department">
+                                                        <% subDepartments.forEach((subDepartment) => { %>
+                                    
+                                                        <option value="<%=  subDepartment.id %>">
+                                                            <%= subDepartment.sub_department_name %>
+                                                        </option>
+                                                        <% }) %>
+                                                       </optgroup>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-nowrap">
+                                        <div class="form-group" style="display: flex;flex-direction: column;">
+                                            <label class="form-label">
+                                                <strong>Permissions&nbsp;&nbsp;</strong></label>
+                                            <select class="form-select d-inline-block form-select-sm" multiple="" 
+                                            name="permissions">
+                                            <% permissions.forEach(permission => {  %>
+                                                <option value="<%= permission.id %>"><%= permission.permission_name %></option>
+                                            <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="submit-btn-div">
+                                    <button class="btn btn-primary submit-btn" type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive text-center table mt-5" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                        <table class="table table-striped my-0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Branch</th>
+                                    <th>Department</th>
+                                    <th>Sub-Department</th>
+                                    <th>Permissions</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <% userPermissions.subDepartment_permissions.forEach((sd_permission, index)=>{  %>
+                                    <tr>
+                                        <td><%= index+1 %></td>
+                                        <td><%= sd_permission.department.branch.branch_name %></td>
+                                        <td><%= sd_permission.department.department_name %></td>
+                                        <td><%= sd_permission.sub_department.sub_department_name %></td>
+                                        <td><%= sd_permission.permission.permission_name %></td>
+                                        <td>
+                                            <div class="action-div">
+                                                <form action="/<%= user.role === 'super-admin' ? 'super' : 'admin' %>/users/<%= userPermissions.id %>/delete-right/<%= sd_permission.id %>" method="post">
+                                                    <input type="hidden" name="u_id" value = "<%= userPermissions.id%>">
+                                                <button class="btn btn-outline-danger btn-sm" type="submit" data-bs-toggle="tooltip" 
+                                                    data-bss-tooltip="" title="Delete Rights">
+                                                    <i class="far fa-trash-alt"></i>
+                                                </button>
+
+                                            </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                              <%  }) %>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td><strong>Sr.No</strong></td>
+                                    <td><strong>Position</strong></td>
+                                    <td><strong>Role</strong></td>
+                                    <td><strong>Divison</strong></td>
+                                    <td><strong>Status</strong></td>
+                                    <td><strong>Action</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <%- include('../includes/footer')  %>
+
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <%- include('../includes/script')  %>
+    <script>
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const departmentSelect = document.getElementById('department');
+    const subDepartmentSelect = document.getElementById('sub-department');
+
+    // Event listener for department selection
+    let optGroup = document.getElementById('editOptGroup');
+
+                if(!optGroup) optGroup = ''
+
+                departmentSelect.addEventListener('change', async(event) => {
+                    const userRole = "<%= user.role %>"
+               
+                    optGroup.innerHTML = ""
+                    const departmentId = event.target.value;
+               
+                    
+
+                    const url = `/${userRole === 'super-admin' ? 'super' : 'admin'}/sub-departments/getsubdepartment/${departmentId}`;
+                    const response = await fetch(url);
+                    const subDepartments = await response.json();
+                    
+                // Clear the current department options
+                subDepartmentSelect.innerHTML = '';
+
+                subDepartments.forEach(subdepartment => {
+                    console.log(subdepartment)
+                    const option = document.createElement('option');
+                    option.value = subdepartment.id;
+                    option.textContent = subdepartment.sub_department_name;
+                    subDepartmentSelect.appendChild(option);
+                });
+                });
+});
+
+
+    </script>
+</body>
+
+</html>

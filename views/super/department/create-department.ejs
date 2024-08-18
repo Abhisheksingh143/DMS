@@ -1,0 +1,66 @@
+<%- include('../../includes/header')  %>
+<body id="page-top">
+    <div id="wrapper">
+        <%- include('../../includes/sidebar') %>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+               <%- include('../../includes/navbar')  %>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-3">Department</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3" style="display: flex;justify-content: space-between;align-items: center;">
+                            <p class="lead text-primary m-0 fw-bold">Create Department</p>
+                        </div>
+                        <div class="card-body">
+                            <% if(mode === 'create'){ %>
+                            <form method="post" action="/super/departments/create">
+        
+                                <div class="form-group">
+                                    <label class="form-label" for="branch_name">Branch</label>
+                                    <select name="branch_name" class="form-select">
+                                    <% branches.forEach((branch)=>{ %>
+                                        <option  value="<%= branch.id %>"><%= branch.branch_name %></option>
+                                    <% }) %>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="department_name">Department Name</label>
+                                    <input class="form-control form-input"
+                                    type="text" name="department_name" autocomplete="on"
+                                     placeholder="Department Name">
+                                </div>
+                                <div class="submit-btn-div"><button class="btn btn-primary submit-btn" type="submit">Save</button></div>
+                            </form>
+                            <% } %>
+                            <% if(mode === 'edit'){ %>
+                                <form method="post" action="/super/departments/<%= department.id %>/update">
+        
+                                    <div class="form-group">
+                                        <label class="form-label" for="branch_name">Branch</label>
+                                        <select name="branch_name" class="form-select">
+                                        <% branches.forEach((branch)=>{ %>
+                                            <option <%= branch && branch.id === department.branchId ? 'selected' : '' %> value="<%= branch.id %>"><%= branch.branch_name %></option>
+                                        <% }) %>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="department_name">Department Name</label>
+                                        <input class="form-control form-input"
+                                        type="text" name="department_name" autocomplete="on" value="<%= department.department_name %>"
+                                         placeholder="Department Name">
+                                    </div>
+                                    <div class="submit-btn-div"><button class="btn btn-primary submit-btn" type="submit">Save</button></div>
+                                </form>
+                                <%} %>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%-include('../../includes/footer') %>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <%-include('../../includes/script') %>
+</body>
+
+</html>

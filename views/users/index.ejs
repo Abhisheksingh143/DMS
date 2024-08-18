@@ -1,0 +1,113 @@
+<%- include('../includes/header')  %>
+
+<body id="page-top">
+    <div id="wrapper">
+        <%- include('../includes/sidebar')  %>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <%- include('../includes/navbar')  %>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Users</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3" style="display: flex;justify-content: space-between;align-items: center;">
+                            <p class="lead text-primary m-0 fw-bold">User List</p>
+                            <div><a class="btn btn-primary" role="button" href="<%= user.role ==='super-admin' ? '/super' : '/admin' %>/users/create">Create User</a></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 text-nowrap">
+                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
+                                                <option value="10" selected="">10</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>&nbsp;</label></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search"></label></div>
+                                </div>
+                            </div>
+                            <div class="table-responsive text-center table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                <table class="table table-striped my-0" id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr.No</th>
+                                            <th>Name</th>
+                                            <th>Role</th>
+                                            <th>Divison</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <% users.forEach((data, index)=>{  %>
+                                            <tr>
+                                                <td><%= index+1 %></td>
+                                                <td><%= data.username %></td>
+                                                <td><%= data.role%></td>
+                                                <td><%= data.role === 'super-admin' ? 'All' : data.branch.branch_name %></td>
+                                                <td><%= data.status===1 ? 'Active' : 'Deactive' %></td>
+                                                <td>
+                                                    <div class="action-div">
+                                                            <a href="<%= user.role ==='super-admin' ? '/super' : '/admin' %>/users/edit/<%= data.id %>?edit=true" class="btn btn-outline-warning btn-sm" role="button" data-bs-toggle="tooltip" data-bss-tooltip="" 
+                                                            title="edit user">
+                                                            <i class="far fa-edit text-center"></i>
+                                                         </a>
+
+                                                        <a class="btn btn-outline-success btn-sm" role="button" data-bs-toggle="tooltip" 
+                                                                data-bss-tooltip="" title="right user" href="<%= user.role ==='super-admin' ? '/super' : '/admin' %>/users/<%= data.id %>/user-rights">
+                                                                <i class="far fa-check-circle text-center"></i>
+                                                        </a>
+
+                                                      
+                                                            <form action="/<%= user.role === 'admin' ? 'admin' : 'super' %>/users/<%= data.id %>/delete" method="post">
+                                                                <button class="btn btn-outline-danger btn-sm" type="submit" role="button" data-bs-toggle="tooltip" 
+                                                            data-bss-tooltip="" title="delete user"><i class="far fa-trash-alt"></i>
+                                                        </button>
+                                                            </form>
+                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                      <%  }) %>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td><strong>Sr.No</strong></td>
+                                            <td><strong>Position</strong></td>
+                                            <td><strong>Role</strong></td>
+                                            <td><strong>Divison</strong></td>
+                                            <td><strong>Status</strong></td>
+                                            <td><strong>Action</strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 align-self-center">
+                                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                                        <ul class="pagination">
+                                            <li class="page-item disabled"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
+                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%- include('../includes/footer')  %>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <%- include('../includes/script')  %>
+</body>
+
+</html>

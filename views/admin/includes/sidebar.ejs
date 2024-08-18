@@ -1,0 +1,63 @@
+<nav class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark">
+    <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+            <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-file-pdf"></i></div>
+            <div class="sidebar-brand-text mx-3"><span>DMS</span></div>
+        </a>
+        <hr class="sidebar-divider my-0">
+       
+        <% if(user.role === 'admin'){ %>
+            <ul class="navbar-nav text-light" id="accordionSidebar">
+                <li class="nav-item"><a class="nav-link" href="/admin">
+                    <i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                <li class="nav-item dropdown">
+                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="outside" href="#"><i class="far fa-folder-open"></i>&nbsp;BDS</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/adminss/departments">Departmentss</a>
+                        <a class="dropdown-item" href="/admin/sub-departments">Sub-Department</a></div>
+                </li>
+                <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="outside" href="#"><i class="far fa-folder-open"></i>&nbsp;Document</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/admin/documents">Search Document</a>
+                        <a class="dropdown-item" href="/admin/documents/upload-document">Upload Document</a>
+                        <a class="dropdown-item" href="/admin/documents/bulk-upload">Bulk Upload</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="outside" href="#"><i class="far fa-user-circle"></i>&nbsp;Users</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/admin/users">Users</a>
+                        <a class="dropdown-item" href="/admin/users/create">Create User</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="outside" href="#"><i class="far fa-sun"></i>&nbsp;System Setting</a>
+                    <div class="dropdown-menu"><a class="dropdown-item" href="#">First Item</a><a class="dropdown-item" href="#">Second Item</a><a class="dropdown-item" href="#">Third Item</a></div>
+                </li>
+            </ul>
+            <% } %>
+
+
+            <% if(user.role === 'user'){ %>
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item"><a class="nav-link" href="/users">
+                        <i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="outside" href="#"><i class="far fa-folder-open"></i>&nbsp;Document</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/admin/documents">Search Document</a>
+                            <a class="dropdown-item" href="/admin/documents/upload-document">Upload Document</a>
+                            <a class="dropdown-item" href="/admin/documents/bulk-upload">Bulk Upload</a>
+                        </div>
+                    </li>
+                    
+                </ul>
+                <% } %>
+    
+
+           
+                
+
+            
+
+
+        <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+    </div>
+</nav>

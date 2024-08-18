@@ -1,0 +1,218 @@
+<%- include('../includes/header')  %>
+
+
+<body id="page-top">
+    <div id="wrapper">
+        <%- include('../includes/sidebar')  %>
+
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <%- include('../includes/navbar')  %>
+
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Users</h3>
+                    
+                    <div class="card shadow">
+                        <div class="card-header py-3" style="display: flex;justify-content: space-between;align-items: center;">
+                            <p class="lead text-primary m-0 fw-bold">Create User</p>
+                        </div>
+                        <div class="card-body">
+                            
+                            <% if(mode === 'create'){ %>
+
+                                <form method="post" action="<%= user.role ==='super-admin' ? '/super' : '/admin' %>/users/create">
+                        
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="username">Name</label>
+                                                <input class="form-control form-input" type="text" name="username" 
+                                                
+                                                autocomplete="on" placeholder="Username"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="email">Email</label>
+                                                <input class="form-control form-input"
+                                                type="text" name="email" 
+                                              
+                                               
+                                                autocomplete="on" placeholder="Email"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="mobile_no">Mobile No</label>
+                                                <input class="form-control form-input" type="number"
+                                                
+                                                name="mobile_no" 
+                                                
+                                                autocomplete="on" placeholder="Mobile No"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="role">Role</label>
+                                                <select name="role" class="form-select">
+                                                    <option value="">Select Role</option>
+                                                    <optgroup label="Roles">
+                                                        <% if(user.role === 'super-admin'){ %>
+                                                        <option value="admin" >Admin</option>
+                                                        <option value="super-admin">Super-Admin</option>
+                                                        <% } %>
+                                                      
+                                                        <option value="user">User</option>
+                                                        
+                                                    </optgroup>
+                                            </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="password">Password</label>
+                                                <input class="form-control" type="password"
+                                             name="password" placeholder="Password"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="cnf_password">Confirm Password</label>
+                                                <input class="form-control" type="password" name="cnf_password" placeholder="Confirm Password"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="status">Status</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="">Select Status</option>
+                                                    <option value="1">Active</option>
+                                                    <option value="0">Deactive</option>
+                                                </select></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="branch">Branch</label>
+                                                <select name="branch" class="form-select"
+                                                    <option value="">Select Branch</option>
+                                                <% branches.forEach((branch)=>{ %>
+                                                    <option 
+                                                     value="<%= branch.id %>"><%= branch.branch_name %></option>
+                                                <% }) %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="submit-btn-div">
+                                        <button class="btn btn-primary submit-btn" type="submit">Save</button>
+                                    </div>
+                                </form>
+
+                                <% } %>
+
+
+
+                            <% if(mode === 'edit'){ %>
+
+                            <form method="post" action="<%= user.role ==='super-admin' ? '/super' : '/admin' %>/users/<%= userData ? userData.id + '/update/'  : 'create' %>">
+                        
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="username">Name</label>
+                                            <input class="form-control form-input" type="text" name="username" 
+                                            value="<%= userData ? userData.username : '' %>"
+                                            autocomplete="on" placeholder="Username"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="email">Email</label>
+                                            <input class="form-control form-input"
+                                            type="text" name="email" 
+                                            <%= user ? 'disabled' : '' %>
+                                            value="<%= userData ? userData.email : '' %>"
+                                            autocomplete="on" placeholder="Email"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="mobile_no">Mobile No</label>
+                                            <input class="form-control form-input" type="number"
+                                            value="<%= userData ? userData.mobile_no : '' %>"
+                                            name="mobile_no" 
+                                            <%= userData ? 'disabled' : '' %>
+                                            autocomplete="on" placeholder="Mobile No"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="role">Role</label>
+                                            <select name="role" class="form-select">
+                                                <option value="">Select Role</option>
+                                                <optgroup label="Roles">
+                                                <% if(user.role === 'super-admin') { %>
+                                                    <option <%= userData && userData.role === 'admin' ? 'selected' : '' %> value="admin" >Admin</option>
+                                                    <option <%= userData && userData.role === 'super-admin' ? 'selected' : '' %> value="super-admin">Super-Admin</option>
+                                                <% } %>
+                                                    <option <%= userData && userData.role === 'user' ? 'selected' : '' %> value="user">User</option>
+                                                </optgroup>
+                                        </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="password">Password</label>
+                                            <input class="form-control" type="password"
+                                         name="password" placeholder="Password"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="cnf_password">Confirm Password</label>
+                                            <input class="form-control" type="password" name="cnf_password" placeholder="Confirm Password"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="status">Status</label>
+                                            <select name="status" class="form-select">
+                                                <option value="">Select Status</option>
+                                                <option <%= userData && userData.status === 1 ? 'selected' : '' %> value="1">Active</option>
+                                                <option <%= userData && userData.status === 0 ? 'selected' : '' %> value="0">Deactive</option>
+                                            </select></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="branch">Branch</label>
+                                            <select name="branch" class="form-select"
+                                                <option value="">Select Branch</option>
+                                            <% branches.forEach((branch)=>{ %>
+                                                <option <%= userData && userData.branch_id === branch.id ? 'selected' : '' %>
+                                                 value="<%= branch.id %>"><%= branch.branch_name %></option>
+                                            <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="submit-btn-div">
+                                    <button class="btn btn-primary submit-btn" type="submit">Save</button>
+                                </div>
+                            </form>
+
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%- include('../includes/footer')  %>
+
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <%- include('../includes/script')  %>
+
+</body>
+
+</html>

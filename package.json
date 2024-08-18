@@ -1,0 +1,30 @@
+{
+  "name": "website-design",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "Abhisheksingh Pardeshi",
+  "license": "ISC",
+  "description": "Document Management System",
+  "dependencies": {
+    "adm-zip": "^0.5.15",
+    "bcrypt": "^5.1.1",
+    "connect-flash": "^0.1.1",
+    "connect-session-sequelize": "^7.1.7",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.1.0",
+    "fs-extra": "^11.2.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.10.2",
+    "nodemon": "^3.1.4",
+    "sequelize": "^6.37.3",
+    "unzipper": "^0.12.3",
+    "xlsx": "^0.18.5"
+  }
+}

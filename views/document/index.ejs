@@ -1,0 +1,276 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<%- include('../includes/header') %>
+
+<body id="page-top">
+    <div id="wrapper">
+        <%- include('../includes/sidebar') %>
+
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <%- include('../includes/navbar') %>
+
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Document</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">Search Document</p>
+                        </div>
+                        <div class="card-body">
+                                
+                          
+                                
+                          
+                            <form id="searchForm">
+                    
+                                    <div class="row">
+                                        <div class="col-md-4 text-nowrap">
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <strong>Division&nbsp;&nbsp;</strong>
+                                                    
+                                                    <select id="branch" name="branch_id" class="d-inline-block form-select form-select-sm">
+                                                        <option selected="">Select Branch</option>
+                                                        <% branches.forEach((branch) => {   %>
+                                                            <option value="<%= branch.id %>"><%= branch.branch_name %></option>
+                                                        <% }) %>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 text-nowrap">
+                                            <div class="form-group"><label class="form-label"><strong>Department&nbsp;&nbsp;</strong>
+                                            
+                                                    <select id="department"  class="d-inline-block form-select form-select-sm" name="department_id">
+                                                        <option selected value="">Choose Department</option>
+                                                        <optgroup id="subDepartmentOptGroup" label="Departments">
+                                                           
+                                                        </optgroup>
+                                                    </select>
+                                                </label></div>
+                                        </div>
+                                        <div class="col-md-4 text-nowrap">
+                                            <div class="form-group"><label class="form-label"><strong>Sub-Department&nbsp;&nbsp;</strong>
+                                                <select name="subDepartmentId" id="sub-department" class="d-inline-block form-select form-select-sm">
+                                                        <option value="finance" selected="">Select Sub Dept</option>
+                                                        
+                                                    </select></label></div>
+                                        </div>
+                                        <div class="col-md-4 text-nowrap">
+                                            <div class="form-group">
+                                                <label class="form-label"><strong>Custom Field Search&nbsp;&nbsp;</strong>
+                                                <select id="custom-fields-container" name="search_key" class="d-inline-block form-select form-select-sm">
+                                                        <option value="finance" selected="">finance</option>
+                                                        
+                                                    </select>
+                                                    <input type="text" name="search_value">
+                                                </label>
+                                            </div>
+                                        </div>
+        
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <button class="btn btn-primary">Search</button>
+                                    </div>
+                                </form>
+                            <div class="table-responsive text-center table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                <table class="table table-striped table-bordered my-0" id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr.No</th>
+                                            <th>Division</th>
+                                            <th>Department</th>
+                                            <th>Sub-Department</th>
+                                            <th>Document Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                       
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td><strong>Sr.No</strong></td>
+                                            <td><strong>Division</strong></td>
+                                            <td><strong>Department</strong></td>
+                                            <td><strong>Sub-Department</strong></td>
+                                            <td><strong>Document-Name</strong></td>
+                                            <td><strong>Action</strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 align-self-center">
+                                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                                        <ul class="pagination">
+                                            <li class="page-item disabled"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
+                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%- include('../includes/footer') %>
+
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <%- include('../includes/script') %>
+
+</body>
+<script>
+    const userRole = '<%= user.role %>'
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const departmentSelect = document.getElementById('department');
+    const subDepartmentSelect = document.getElementById('sub-department');
+    const customFieldsContainer = document.getElementById('custom-fields-container'); // Container for custom fields
+
+    // Event listener for department selection
+    let optGroup = document.getElementById('editOptGroup');
+
+                if(!optGroup) optGroup = ''
+
+                departmentSelect.addEventListener('change', async(event) => {
+                    const userRole = "<%= user.role %>"
+               
+                    optGroup.innerHTML = ""
+                    const departmentId = event.target.value;
+               
+                    let url = `/${userRole === 'super-admin' ? 'super' : 'admin'}/sub-departments/getsubdepartment/${departmentId}`;
+
+                    if(userRole === 'user')
+                        url = `/users/sd`;
+
+                    const response = await fetch(url);
+                    const subDepartments = await response.json();
+                    console.log(subDepartments)
+                // Clear the current department options
+                subDepartmentSelect.innerHTML = '';
+                subDepartmentSelect.innerHTML = '<option selected>Choose Sub-Department</option>';
+                subDepartments.forEach(subdepartment => {
+                    console.log(subdepartment)
+                    const option = document.createElement('option');
+                    option.value = subdepartment.id;
+                    option.textContent = subdepartment.sub_department_name;
+                    subDepartmentSelect.appendChild(option);
+                });
+                });
+
+
+        subDepartmentSelect.addEventListener('change', async (event) => {
+        
+        const subDepartmentId = event.target.value;
+           const userRole = '<%= user.role %>'
+        let url = `/<%= user.role ==='super-admin' ? 'super' :'admin'  %>/custom-field/fetch/${subDepartmentId}/all`;
+           
+        if(userRole ==='user') 
+            url = `/users/custom-field/fetch/${subDepartmentId}/all`           
+            
+        const response = await fetch(url);
+        const customFields = await response.json();
+
+        // Clear the current custom fields
+        customFieldsContainer.innerHTML = '';
+        customFieldsContainer.innerHTML = '<option selected>Choose Field</option>';
+        
+
+            customFields.forEach(field => {
+                    console.log(field)
+                    const option = document.createElement('option');
+                    option.value = field.fieldName;
+                    option.textContent = field.label;
+                    customFieldsContainer.appendChild(option);
+                });
+    });
+
+
+});
+
+</script>
+<script>
+  $(document).ready(function() {
+    $('#searchForm').on('submit', function(e) {
+        e.preventDefault();
+
+        const formData = $(this).serialize(); // Serialize the form data
+
+        const userRole = '<%= user.role %>';
+        let url = `/${userRole === 'admin' ? 'admin' : 'super'}/documents/search`;
+        if(userRole === 'user')
+                url = `/users/documents/search`;
+        
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: formData,
+            success: function(response) {
+                const tbody = $('#tbody');
+                tbody.empty(); // Clear existing rows
+
+                response.forEach(function(document, i) {
+                    console.log(document)
+                    const queryParams = `?branch=${document.branch_name}&department_name=${document.department_name}&sub_department_name=${document.sub_department_name}`;
+
+                    const editUrl = `/${userRole === 'admin' ? 'admin' : 'super'}/documents/${document.id}/edit`;
+                    const viewUrl = `/${userRole === 'admin' ? 'admin' : 'super'}/documents/${document.id}`;
+                    const row = `<tr>
+                        <td>${i + 1}</td>
+                        <td>${document.branch_name}</td>
+                        <td>${document.department_name}</td>
+                        <td>${document.sub_department_name}</td>
+                        <td>${document.document_name}</td>
+                        <td>
+                            <div class="action-div">
+                                <% if(user.role === 'user' ){ %>
+                                <a class="btn btn-outline-warning btn-sm" href="/users/documents/${document.id}/edit" title="Edit Document"><i class="far fa-edit"></i></a>
+                                <% }  %>
+
+                                <% if(user.role === 'admin' || user.role === 'super-admin'){ %>
+                                <a class="btn btn-outline-warning btn-sm" href= "${editUrl}${queryParams}"  title="Edit Document"><i class="far fa-edit"></i></a>
+                                <% }  %>
+
+                                <a class="btn btn-outline-success btn-sm" href="edit-department.html" title="View Document"><i class="far fa-eye"></i></a>
+                
+                <% if(user.role === 'user'){ %>
+                    <form action="/users/documents/${document.id}/delete" method="POST">
+                                <button class="btn btn-outline-danger btn-sm" type="submit" title="Delete"><i class="far fa-trash-alt"></i></button>
+                     </form>
+                <% } %>
+
+                <% if(user.role === 'admin' || user.role === 'super-admin'){ %>
+                     <form action="/<%= user.role === 'admin' ? 'admin' :'super' %>/documents/${document.id}/delete" method="POST">
+                        <button class="btn btn-outline-danger btn-sm" type="submit" title="Delete"><i class="far fa-trash-alt"></i></button>
+                </form>
+
+                     <% } %>
+                            </div>
+                        </td>
+                    </tr>`;
+                    tbody.append(row);
+                });
+            },
+            error: function(xhr) {
+                console.log(xhr);
+                const error = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
+                $('#flash-messages').html('<div class="alert alert-danger">' + error + '</div>');
+            }
+        });
+    });
+});
+
+    </script>
+<script src="/js/fetch_departments.js"></script>
+
+
+</html>
